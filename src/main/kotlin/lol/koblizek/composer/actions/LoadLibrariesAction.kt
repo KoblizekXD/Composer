@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import lol.koblizek.composer.ComposerPlugin
 import org.apache.commons.lang3.SystemUtils
 import org.gradle.api.Project
+import kotlin.io.path.notExists
 import kotlin.io.path.readText
 
 class LoadLibrariesAction : Action() {
@@ -31,7 +32,12 @@ class LoadLibrariesAction : Action() {
     }
 
     override fun run(project: Project) {
-        val libraries = Gson().fromJson(ComposerPlugin.genFilesTask.temporaryDir.toPath().resolve("libraries.json").readText(), JsonArray::class.java)
+        val l = ComposerPlugin.genFilesTask.temporaryDir.toPath().resolve("libraries.json")
+        if (l.notExists()) {
+            println("Cannot apply libraries: libraries.json is missing")
+            return
+        }
+        val libraries = Gson().fromJson(l.readText(), JsonArray::class.java)
 
         libraries.forEach { t ->
             val library = t.asJsonObject

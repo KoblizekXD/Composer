@@ -4,6 +4,7 @@ class RuntimeConfiguration {
     private val resources: ArrayList<String> = ArrayList()
     private val toRemove: ArrayList<String> = ArrayList()
     private val moveToRoot: ArrayList<String> = ArrayList()
+    private var decompilationSource: String? = null
 
     /**
      * Marks file or directory in source directory as a resource.
@@ -21,5 +22,9 @@ class RuntimeConfiguration {
 
     fun moveToRoot(relPath: String) {
         moveToRoot.add(relPath)
+    }
+
+    fun decompileIn(sourcePath: String) {
+        decompilationSource = sourcePath
     }
 }
