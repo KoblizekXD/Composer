@@ -1,6 +1,9 @@
 plugins {
     kotlin("jvm") version "1.9.0"
     `java-library`
+    `maven-publish`
+    `java-gradle-plugin`
+    id("com.gradle.plugin-publish") version "1.1.0"
 }
 
 group = "lol.koblizek"
@@ -35,4 +38,31 @@ tasks.test {
 
 kotlin {
     jvmToolchain(17)
+}
+
+gradlePlugin {
+    website = "https://github.com/ComposeMC/Composer"
+    vcsUrl = "https://github.com/ComposeMC/Composer"
+
+    plugins {
+        create("composer") {
+            id = "lol.koblizek.composer"
+            displayName = "Composer"
+            description = "Plugin which makes creating Minecraft server development much easier!"
+            implementationClass = "lol.koblizek.composer.ComposerPlugin"
+            tags = listOf("minecraft", "decompilation", "deobfuscation", "plugins")
+        }
+    }
+}
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "lol.koblizek"
+            artifactId = "composer"
+            from(components["java"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
