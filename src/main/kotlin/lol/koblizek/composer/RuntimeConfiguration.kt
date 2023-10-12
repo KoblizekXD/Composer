@@ -6,6 +6,7 @@ class RuntimeConfiguration {
     internal val moveToRoot: ArrayList<String> = ArrayList()
     internal var decompilationSource: String? = null
     internal var resourcesSource: String? = null
+    internal var useInstead: String? = null
 
     /**
      * Marks file or directory in source directory as a resource.
@@ -31,5 +32,9 @@ class RuntimeConfiguration {
 
     fun putResourcesIn(sourcePath: String) {
         resourcesSource = sourcePath
+    }
+
+    fun extractAndUseInstead(relativeZipLocation: String) {
+        useInstead = relativeZipLocation
     }
 }

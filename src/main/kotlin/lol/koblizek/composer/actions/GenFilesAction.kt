@@ -4,7 +4,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import lol.koblizek.composer.ComposerPlugin
 import lol.koblizek.composer.util.Download
+import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
+import java.nio.file.CopyOption
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+import java.util.zip.ZipFile
 
 class GenFilesAction : Action() {
 
@@ -18,8 +23,18 @@ class GenFilesAction : Action() {
             } ?: return
         val url = obj.asJsonObject.getAsJsonPrimitive("url").asString
         val versionData = Gson().fromJson(Download(temporaryDir, url, "version_data.json").file.readText(), JsonObject::class.java)
-        Download(temporaryDir, versionData.getAsJsonObject("downloads")
-            .getAsJsonObject("server").getAsJsonPrimitive("url").asString, "server.jar")
+        val server = Download(temporaryDir, versionData.getAsJsonObject("downloads")
+            .getAsJsonObject("server").getAsJsonPrimitive("url").asString, "server.jar").file
+        if (ComposerPlugin.isConfigInitialized() || ComposerPlugin.config.useInstead != null) {
+            val zip = ZipFile(server)
+            val temp = temporaryDir.toPath().resolve("server-temp.jar").toFile()
+            FileUtils.copyInputStreamToFile(
+                zip.getInputStream(zip.getEntry(ComposerPlugin.config.useInstead!!)),
+                temp
+            )
+            server.delete()
+            temp.renameTo(server)
+        }
         temporaryDir.toPath().resolve("libraries.json").toFile().writer().use {
             Gson().toJson(versionData.getAsJsonArray("libraries"), it)
         }
