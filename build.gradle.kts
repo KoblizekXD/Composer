@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("commons-io:commons-io:2.14.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(gradleApi())
     testImplementation(kotlin("test"))
