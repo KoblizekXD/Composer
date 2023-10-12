@@ -1,15 +1,12 @@
-package lol.koblizek.composer.tasks
+package lol.koblizek.composer.actions
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import lol.koblizek.composer.ComposerPlugin
-import lol.koblizek.composer.actions.Action
 import lol.koblizek.composer.util.Download
-import org.gradle.api.DefaultTask
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskAction
 
-class GenFilesTask : Action() {
+class GenFilesAction : Action() {
 
     override fun run(project: Project) {
         val manifest = Download(temporaryDir, "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json", "version_manifest.json").file

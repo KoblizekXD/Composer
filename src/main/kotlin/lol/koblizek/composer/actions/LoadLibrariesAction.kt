@@ -3,7 +3,6 @@ package lol.koblizek.composer.actions
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import lol.koblizek.composer.ComposerPlugin
 import org.apache.commons.lang3.SystemUtils
 import org.gradle.api.Project
 import kotlin.io.path.notExists
@@ -32,7 +31,7 @@ class LoadLibrariesAction : Action() {
     }
 
     override fun run(project: Project) {
-        val l = ComposerPlugin.genFilesTask.temporaryDir.toPath().resolve("libraries.json")
+        val l = GenFilesAction().temporaryDir.toPath().resolve("libraries.json")
         if (l.notExists()) {
             println("Cannot apply libraries: libraries.json is missing")
             return
