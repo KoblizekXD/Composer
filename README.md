@@ -5,7 +5,22 @@ The project is currently running on yarn mappings,
 as they're currently the most complete mappings.  
 
 ### Installation  
-There's currently no way to install the plugin :(  
+You can install the plugin to your Gradle project with **Kotlin DSL** by:  
+- Adding plugin portal repository to your `settings.gradle.kts`:
+  ```kotlin
+    pluginManagement {
+        repositories {
+            mavenCentral()
+            gradlePluginPortal()
+        }
+    }
+  ```
+- Adding the plugin itself to the **build.gradle.kts**
+  ```kotlin
+    plugins {
+        id("lol.koblizek.composter") version "0.1"
+    } 
+  ```
 
 ### Usage  
 Here's a sample Gradle build file:  
