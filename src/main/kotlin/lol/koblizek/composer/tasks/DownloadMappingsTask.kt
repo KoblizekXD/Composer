@@ -3,25 +3,15 @@ package lol.koblizek.composer.tasks
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import lol.koblizek.composer.ComposerPlugin
+import lol.koblizek.composer.actions.Action
 import lol.koblizek.composer.util.Download
 import org.apache.commons.io.FileUtils
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.Project
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.zip.ZipFile
 
-abstract class DownloadMappingsTask : DefaultTask() {
-    @TaskAction
-    fun download() {
-        val mappings = getMappingsUrl(ComposerPlugin.version)
-        val zip = ZipFile(Download(this, mappings, "mappings.zip").file)
-        val tiny = temporaryDir.toPath().resolve("mappings.tiny").toFile()
-        FileUtils.copyInputStreamToFile(
-            zip.getInputStream(zip.getEntry("mappings/mappings.tiny")),
-            tiny
-        )
-    }
+class DownloadMappingsTask : Action() {
 
     private fun getMappingsUrl(gameVersion: String): String {
         val array = readJsonArray(gameVersion)
@@ -33,5 +23,15 @@ abstract class DownloadMappingsTask : DefaultTask() {
         return Gson().fromJson(
             InputStreamReader(URL("https://meta.fabricmc.net/v2/versions/yarn/$version").openStream()),
             JsonArray::class.java)
+    }
+
+    override fun run(project: Project) {
+        val mappings = getMappingsUrl(ComposerPlugin.version)
+        val zip = ZipFile(Download(temporaryDir, mappings, "mappings.zip").file)
+        val tiny = temporaryDir.toPath().resolve("mappings.tiny").toFile()
+        FileUtils.copyInputStreamToFile(
+            zip.getInputStream(zip.getEntry("mappings/mappings.tiny")),
+            tiny
+        )
     }
 }

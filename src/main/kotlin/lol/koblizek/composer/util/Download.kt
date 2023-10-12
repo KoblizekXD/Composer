@@ -4,12 +4,12 @@ import org.gradle.api.Task
 import java.io.File
 import java.net.URL
 
-class Download(task: Task, url: String, name: String) {
+class Download(dir: File, url: String, name: String) {
     internal val file: File
 
     init {
         val uri = URL(url)
-        val path = task.temporaryDir.toPath().resolve(name)
+        val path = dir.toPath().resolve(name)
         file = path.toFile()
         uri.openStream().use { input ->
             file.outputStream().use { output ->
@@ -17,4 +17,6 @@ class Download(task: Task, url: String, name: String) {
             }
         }
     }
+
+    constructor(task: Task, url: String, name: String) : this(task.temporaryDir, url, name)
 }
