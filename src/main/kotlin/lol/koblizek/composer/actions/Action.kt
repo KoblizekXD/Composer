@@ -20,7 +20,7 @@ abstract class Action() {
     }
 
     fun start(project: Project) {
-        if (temporaryDir.toPath().resolve("done.txt").exists()) return
+        if (this::class.simpleName != "LoadLibrariesAction" && temporaryDir.toPath().resolve("done.txt").exists()) return
         run(project)
         temporaryDir.toPath().resolve("done.txt").createFile()
     }

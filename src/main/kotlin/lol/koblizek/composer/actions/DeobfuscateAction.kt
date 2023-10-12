@@ -14,6 +14,7 @@ import net.minecraftforge.fart.api.SignatureStripperConfig
 import net.minecraftforge.fart.api.SourceFixerConfig
 import net.minecraftforge.fart.api.Transformer
 import org.gradle.api.Project
+import org.gradle.workers.WorkerExecutor
 import java.io.*
 import java.util.regex.Pattern
 
@@ -44,6 +45,7 @@ class DeobfuscateAction : Action() {
                 outputConsumer.addNonClassFiles(inputJar.toPath(), NonClassCopyMode.FIX_META_INF, remapper)
                 remapper.readInputs(inputJar.toPath())
                 remapper.apply(outputConsumer)
+                outputConsumer.close()
             }
         } catch (e: IOException) {
             println("Error occurred but was ignored")

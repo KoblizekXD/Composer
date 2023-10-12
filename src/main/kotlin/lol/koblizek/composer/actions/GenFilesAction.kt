@@ -6,9 +6,7 @@ import lol.koblizek.composer.ComposerPlugin
 import lol.koblizek.composer.util.Download
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
-import java.nio.file.CopyOption
 import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import java.util.zip.ZipFile
 
 class GenFilesAction : Action() {
@@ -25,14 +23,17 @@ class GenFilesAction : Action() {
         val versionData = Gson().fromJson(Download(temporaryDir, url, "version_data.json").file.readText(), JsonObject::class.java)
         val server = Download(temporaryDir, versionData.getAsJsonObject("downloads")
             .getAsJsonObject("server").getAsJsonPrimitive("url").asString, "server.jar").file
-        if (ComposerPlugin.isConfigInitialized() || ComposerPlugin.config.useInstead != null) {
+        if (ComposerPlugin.isConfigInitialized() && ComposerPlugin.config.useInstead != null) {
             val zip = ZipFile(server)
             val temp = temporaryDir.toPath().resolve("server-temp.jar").toFile()
+            val ins = zip.getInputStream(zip.getEntry(ComposerPlugin.config.useInstead!!))
             FileUtils.copyInputStreamToFile(
-                zip.getInputStream(zip.getEntry(ComposerPlugin.config.useInstead!!)),
+                ins,
                 temp
             )
-            server.delete()
+            ins.close()
+            zip.close()
+            Files.delete(server.toPath())
             temp.renameTo(server)
         }
         temporaryDir.toPath().resolve("libraries.json").toFile().writer().use {
