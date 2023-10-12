@@ -4,11 +4,13 @@ import lol.koblizek.composer.actions.LoadLibrariesAction
 import lol.koblizek.composer.actions.DeobfuscateAction
 import lol.koblizek.composer.actions.DownloadMappingsAction
 import lol.koblizek.composer.actions.GenFilesAction
+import lol.koblizek.composer.task.CleanUpTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class ComposerPlugin : Plugin<Project> {
     override fun apply(target: Project) {
+        target.tasks.create("cleanUp", CleanUpTask::class.java)
         project = target
     }
 

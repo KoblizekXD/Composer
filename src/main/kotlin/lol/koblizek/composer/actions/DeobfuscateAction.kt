@@ -54,7 +54,7 @@ class DeobfuscateAction : Action() {
 
     override fun run(project: Project) {
         val unDeobf = GenFilesAction().temporaryDir.toPath().resolve("server.jar").toFile()
-        val mappings = GenFilesAction().temporaryDir.toPath().resolve("mappings.tiny").toFile()
+        val mappings = DownloadMappingsAction().temporaryDir.toPath().resolve("mappings.tiny").toFile()
         Renamer.builder().add(Transformer.recordFixerFactory())
             .add(Transformer.sourceFixerFactory(SourceFixerConfig.JAVA))
             .add(Transformer.signatureStripperFactory(SignatureStripperConfig.ALL)).build()

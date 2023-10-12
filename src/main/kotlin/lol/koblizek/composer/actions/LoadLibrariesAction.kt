@@ -36,12 +36,16 @@ class LoadLibrariesAction : Action() {
             println("Cannot apply libraries: libraries.json is missing")
             return
         }
+        project.repositories.add(project.repositories.maven {
+            it.url = project.uri("https://libraries.minecraft.net")
+        })
+
         val libraries = Gson().fromJson(l.readText(), JsonArray::class.java)
 
         libraries.forEach { t ->
             val library = t.asJsonObject
             if (shouldDownload(library)) {
-                project.dependencies.add(if (isNative(library.getAsJsonPrimitive("name").asString)) "runtimeOnly" else "implementation", library)
+                project.dependencies.add(if (isNative(library.getAsJsonPrimitive("name").asString)) "runtimeOnly" else "implementation", library.getAsJsonPrimitive("name").asString)
             }
         }
     }
