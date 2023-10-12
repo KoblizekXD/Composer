@@ -1,10 +1,11 @@
 package lol.koblizek.composer
 
 class RuntimeConfiguration {
-    private val resources: ArrayList<String> = ArrayList()
-    private val toRemove: ArrayList<String> = ArrayList()
-    private val moveToRoot: ArrayList<String> = ArrayList()
-    private var decompilationSource: String? = null
+    internal val resources: ArrayList<String> = ArrayList()
+    internal val toRemove: ArrayList<String> = ArrayList()
+    internal val moveToRoot: ArrayList<String> = ArrayList()
+    internal var decompilationSource: String? = null
+    internal var resourcesSource: String? = null
 
     /**
      * Marks file or directory in source directory as a resource.
@@ -26,5 +27,9 @@ class RuntimeConfiguration {
 
     fun decompileIn(sourcePath: String) {
         decompilationSource = sourcePath
+    }
+
+    fun putResourcesIn(sourcePath: String) {
+        resourcesSource = sourcePath
     }
 }
