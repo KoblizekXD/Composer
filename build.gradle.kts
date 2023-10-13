@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "lol.koblizek"
-version = "0.1"
+version = "0.2"
 
 repositories {
     mavenCentral()
