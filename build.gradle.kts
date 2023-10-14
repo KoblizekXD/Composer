@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "lol.koblizek"
-version = "0.2"
+version = "0.1"
 
 repositories {
     mavenCentral()
@@ -18,9 +18,11 @@ repositories {
         name = "neoforgedReleases"
         url = uri("https://maven.neoforged.net/releases")
     }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
+    implementation("com.github.MCPHackers:DiffPatch:cde1224")
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("commons-io:commons-io:2.14.0")
     implementation("com.google.code.gson:gson:2.10.1")
