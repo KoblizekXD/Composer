@@ -1,6 +1,7 @@
 package lol.koblizek.composer
 
 import lol.koblizek.composer.actions.*
+import lol.koblizek.composer.task.ApplyPatchesTask
 import lol.koblizek.composer.task.CleanUpTask
 import lol.koblizek.composer.task.GenPatchesTask
 import org.gradle.api.Plugin
@@ -9,7 +10,8 @@ import org.gradle.api.Project
 class ComposerPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.tasks.create("cleanUp", CleanUpTask::class.java)
-        target.tasks.create("cleanUp", GenPatchesTask::class.java)
+        target.tasks.create("genPatches", GenPatchesTask::class.java)
+        target.tasks.create("applyPatches", ApplyPatchesTask::class.java)
         project = target
     }
 
