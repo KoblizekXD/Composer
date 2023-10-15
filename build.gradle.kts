@@ -20,13 +20,10 @@ tasks.withType<Jar> {
 tasks.getByName("shadowJar", ShadowJar::class) {
     archiveClassifier = ""
     isEnableRelocation = true
-    dependencies {
-        exclude(dependency("org.apache.commons:commons-lang3:3.13.0"))
-        exclude(dependency("commons-io:commons-io:2.14.0"))
-        exclude(dependency("com.google.code.gson:gson:2.10.1"))
-        exclude(dependency("org.vineflower:vineflower:1.9.3"))
-    }
 }
+
+tasks.getByName("build")
+    .finalizedBy(tasks.getByName("shadowJar"))
 
 repositories {
     mavenCentral()
@@ -50,7 +47,7 @@ dependencies {
     implementation("net.fabricmc:tiny-remapper:0.8.7")
     implementation("net.fabricmc:mapping-io:0.4.2")
     shadow(gradleApi())
-    testImplementation(kotlin("test"))
+    // testImplementation(kotlin("test"))
 }
 
 tasks.test {
