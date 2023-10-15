@@ -37,4 +37,8 @@ class RuntimeConfiguration {
     fun extractAndUseInstead(relativeZipLocation: String) {
         useInstead = relativeZipLocation
     }
+
+    fun minecraft(version: String) {
+        ComposerPlugin.version = version
+    }
 }

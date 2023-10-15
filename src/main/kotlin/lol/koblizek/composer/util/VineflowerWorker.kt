@@ -1,8 +1,7 @@
 package lol.koblizek.composer.util
 
 import lol.koblizek.composer.ComposerPlugin
-import lol.koblizek.composer.actions.DecompileAction
-import lol.koblizek.composer.actions.DeobfuscateAction
+import lol.koblizek.composer.task.DeobfuscateAction
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.workers.WorkAction

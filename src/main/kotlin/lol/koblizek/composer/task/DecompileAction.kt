@@ -1,16 +1,15 @@
-package lol.koblizek.composer.actions
+package lol.koblizek.composer.task
 
 import lol.koblizek.composer.util.VineflowerWorker
-import org.gradle.api.Project
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
-abstract class DecompileAction : Action() {
-    @Inject
-    public abstract fun getWorkerExecutor(): WorkerExecutor;
-
-    override fun run(project: Project) {
-        val queue = getWorkerExecutor().processIsolation {
+abstract class DecompileAction @Inject constructor(val workerExecutor: WorkerExecutor) : DefaultTask() {
+    @TaskAction
+    fun run() {
+        val queue = workerExecutor.processIsolation {
             it.forkOptions { java ->
                 java.maxHeapSize = "2G"
             }
