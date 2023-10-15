@@ -1,7 +1,6 @@
 package lol.koblizek.composer.util
 
 import lol.koblizek.composer.ComposerPlugin
-import lol.koblizek.composer.task.DeobfuscateAction
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.workers.WorkAction
@@ -39,7 +38,7 @@ abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
             props,
             Logger()
         )
-        fernFlower.addSource(DeobfuscateAction().temporaryDir.resolve("server-deobf.jar"))
+        fernFlower.addSource(ComposerPlugin.deobfGame.temporaryDir.resolve("server-deobf.jar"))
         this.parameters.project.configurations.getByName("compileClasspath").files.forEach {
             fernFlower.addLibrary(it)
         }

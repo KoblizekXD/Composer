@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import lol.koblizek.composer.ComposerPlugin
-import lol.koblizek.composer.task.GenFilesAction
 import org.apache.commons.lang3.SystemUtils
 import org.gradle.api.Project
 import kotlin.io.path.notExists

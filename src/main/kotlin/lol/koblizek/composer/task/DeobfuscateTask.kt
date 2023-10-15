@@ -19,7 +19,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.*
 import java.util.regex.Pattern
 
-abstract class DeobfuscateAction : DefaultTask() {
+abstract class DeobfuscateTask : DefaultTask() {
 
     private fun deobfuscate(inputJar: File, outputPath: File, mappings: File) {
         val writer = StringWriter()

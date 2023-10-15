@@ -6,7 +6,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
-abstract class DecompileAction @Inject constructor(val workerExecutor: WorkerExecutor) : DefaultTask() {
+abstract class DecompileTask @Inject constructor(val workerExecutor: WorkerExecutor) : DefaultTask() {
     @TaskAction
     fun run() {
         val queue = workerExecutor.processIsolation {

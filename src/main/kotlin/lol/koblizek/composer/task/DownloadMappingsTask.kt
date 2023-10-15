@@ -11,7 +11,7 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.util.zip.ZipFile
 
-abstract class DownloadMappingsAction : DefaultTask() {
+abstract class DownloadMappingsTask : DefaultTask() {
 
     private fun getMappingsUrl(gameVersion: String): String {
         val array = readJsonArray(gameVersion)

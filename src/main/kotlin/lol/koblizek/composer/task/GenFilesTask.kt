@@ -10,7 +10,7 @@ import org.gradle.api.tasks.TaskAction
 import java.nio.file.Files
 import java.util.zip.ZipFile
 
-abstract class GenFilesAction : DefaultTask() {
+abstract class GenFilesTask : DefaultTask() {
 
     @TaskAction
     fun run() {
