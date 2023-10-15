@@ -1,16 +1,17 @@
-package lol.koblizek.composer.actions
+package lol.koblizek.composer.task
 
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import lol.koblizek.composer.ComposerPlugin
 import lol.koblizek.composer.util.Download
 import org.apache.commons.io.FileUtils
-import org.gradle.api.Project
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.zip.ZipFile
 
-class DownloadMappingsAction : Action() {
+abstract class DownloadMappingsTask : DefaultTask() {
 
     private fun getMappingsUrl(gameVersion: String): String {
         val array = readJsonArray(gameVersion)
@@ -24,7 +25,8 @@ class DownloadMappingsAction : Action() {
             JsonArray::class.java)
     }
 
-    override fun run(project: Project) {
+    @TaskAction
+    fun run() {
         val mappings = getMappingsUrl(ComposerPlugin.version)
         val zip = ZipFile(Download(temporaryDir, mappings, "mappings.zip").file)
         val tiny = temporaryDir.toPath().resolve("mappings.tiny").toFile()

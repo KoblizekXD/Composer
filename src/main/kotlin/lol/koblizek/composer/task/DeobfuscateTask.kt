@@ -1,5 +1,6 @@
-package lol.koblizek.composer.actions
+package lol.koblizek.composer.task
 
+import lol.koblizek.composer.ComposerPlugin
 import net.fabricmc.mappingio.MappingReader
 import net.fabricmc.mappingio.MappingWriter
 import net.fabricmc.mappingio.adapter.MappingNsCompleter
@@ -13,12 +14,12 @@ import net.minecraftforge.fart.api.Renamer
 import net.minecraftforge.fart.api.SignatureStripperConfig
 import net.minecraftforge.fart.api.SourceFixerConfig
 import net.minecraftforge.fart.api.Transformer
-import org.gradle.api.Project
-import org.gradle.workers.WorkerExecutor
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
 import java.io.*
 import java.util.regex.Pattern
 
-class DeobfuscateAction : Action() {
+abstract class DeobfuscateTask : DefaultTask() {
 
     private fun deobfuscate(inputJar: File, outputPath: File, mappings: File) {
         val writer = StringWriter()
@@ -54,9 +55,11 @@ class DeobfuscateAction : Action() {
         }
     }
 
-    override fun run(project: Project) {
-        val unDeobf = GenFilesAction().temporaryDir.toPath().resolve("server.jar").toFile()
-        val mappings = DownloadMappingsAction().temporaryDir.toPath().resolve("mappings.tiny").toFile()
+    @TaskAction
+    fun run() {
+        if (temporaryDir.resolve("checked").exists()) return
+        val unDeobf = ComposerPlugin.genFiles.temporaryDir.toPath().resolve("server.jar").toFile()
+        val mappings = ComposerPlugin.downloadMappings.temporaryDir.toPath().resolve("mappings.tiny").toFile()
         Renamer.builder().add(Transformer.recordFixerFactory())
             .add(Transformer.sourceFixerFactory(SourceFixerConfig.JAVA))
             .add(Transformer.signatureStripperFactory(SignatureStripperConfig.ALL)).build()
@@ -68,5 +71,6 @@ class DeobfuscateAction : Action() {
             deobf,
             mappings
         )
+        temporaryDir.resolve("checked").createNewFile()
     }
 }
