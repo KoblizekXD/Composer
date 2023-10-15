@@ -14,6 +14,7 @@ abstract class GenFilesTask : DefaultTask() {
 
     @TaskAction
     fun run() {
+        if (temporaryDir.resolve("checked").exists()) return
         val manifest = Download(temporaryDir, "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json", "version_manifest.json").file
         val json = Gson().fromJson(manifest.readText(), JsonObject::class.java)
         val obj = json.getAsJsonArray("versions")
@@ -41,5 +42,6 @@ abstract class GenFilesTask : DefaultTask() {
         temporaryDir.toPath().resolve("libraries.json").toFile().writer().use {
             Gson().toJson(versionData.getAsJsonArray("libraries"), it)
         }
+        temporaryDir.resolve("checked").createNewFile()
     }
 }

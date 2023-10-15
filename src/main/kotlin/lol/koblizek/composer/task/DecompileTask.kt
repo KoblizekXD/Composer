@@ -9,6 +9,7 @@ import javax.inject.Inject
 abstract class DecompileTask @Inject constructor(val workerExecutor: WorkerExecutor) : DefaultTask() {
     @TaskAction
     fun run() {
+        if (temporaryDir.resolve("checked").exists()) return
         val queue = workerExecutor.processIsolation {
             it.forkOptions { java ->
                 java.maxHeapSize = "2G"
@@ -17,5 +18,6 @@ abstract class DecompileTask @Inject constructor(val workerExecutor: WorkerExecu
         queue.submit(VineflowerWorker::class.java) {
             it.project = project
         }
+        temporaryDir.resolve("checked").createNewFile()
     }
 }

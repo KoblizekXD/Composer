@@ -57,7 +57,7 @@ abstract class DeobfuscateTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        temporaryDir
+        if (temporaryDir.resolve("checked").exists()) return
         val unDeobf = ComposerPlugin.genFiles.temporaryDir.toPath().resolve("server.jar").toFile()
         val mappings = ComposerPlugin.downloadMappings.temporaryDir.toPath().resolve("mappings.tiny").toFile()
         Renamer.builder().add(Transformer.recordFixerFactory())
@@ -71,5 +71,6 @@ abstract class DeobfuscateTask : DefaultTask() {
             deobf,
             mappings
         )
+        temporaryDir.resolve("checked").createNewFile()
     }
 }
