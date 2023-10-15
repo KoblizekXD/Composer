@@ -6,11 +6,14 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
-abstract class DecompileTask @Inject constructor(val workerExecutor: WorkerExecutor) : DefaultTask() {
+abstract class DecompileTask : DefaultTask() {
+    @Inject
+    public abstract fun getWorkerExecutor(): WorkerExecutor
+
     @TaskAction
     fun run() {
         if (temporaryDir.resolve("checked").exists()) return
-        val queue = workerExecutor.processIsolation {
+        val queue = getWorkerExecutor().processIsolation {
             it.forkOptions { java ->
                 java.maxHeapSize = "2G"
             }
