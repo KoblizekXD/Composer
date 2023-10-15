@@ -7,6 +7,7 @@ import org.gradle.api.Project
 
 class ComposerPlugin : Plugin<Project> {
     override fun apply(target: Project) {
+        project = target
         target.tasks.create("cleanUp", CleanUpTask::class.java)
         target.tasks.create("genPatches", GenPatchesTask::class.java)
         target.tasks.create("applyPatches", ApplyPatchesTask::class.java)
@@ -17,8 +18,6 @@ class ComposerPlugin : Plugin<Project> {
         target.tasks.getByName("dependencies") {
             it.setDependsOn(arrayListOf(genFiles, downloadMappings, decompileGame))
         }
-
-        project = target
     }
 
     companion object {
