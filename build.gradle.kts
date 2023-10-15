@@ -1,13 +1,32 @@
+import org.gradle.jvm.tasks.Jar
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("jvm") version "1.9.0"
     `java-library`
     `maven-publish`
     `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "lol.koblizek"
 version = "0.2"
+
+tasks.withType<Jar> {
+    this.archiveClassifier.set("slim")
+}
+
+tasks.getByName("shadowJar", ShadowJar::class) {
+    archiveClassifier = ""
+    isEnableRelocation = true
+    dependencies {
+        exclude(dependency("org.apache.commons:commons-lang3:3.13.0"))
+        exclude(dependency("commons-io:commons-io:2.14.0"))
+        exclude(dependency("com.google.code.gson:gson:2.10.1"))
+        exclude(dependency("org.vineflower:vineflower:1.9.3"))
+    }
+}
 
 repositories {
     mavenCentral()
@@ -30,7 +49,7 @@ dependencies {
     implementation("org.vineflower:vineflower:1.9.3")
     implementation("net.fabricmc:tiny-remapper:0.8.7")
     implementation("net.fabricmc:mapping-io:0.4.2")
-    implementation(gradleApi())
+    shadow(gradleApi())
     testImplementation(kotlin("test"))
 }
 
