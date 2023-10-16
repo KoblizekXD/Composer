@@ -19,7 +19,13 @@ tasks.withType<Jar> {
 
 tasks.getByName("shadowJar", ShadowJar::class) {
     archiveClassifier = ""
-    isEnableRelocation = true
+
+    dependencies {
+        include(dependency("net.fabricmc:tiny-remapper:0.8.7"))
+        include(dependency("net.neoforged:AutoRenamingTool:1.0.7"))
+        include(dependency("com.github.MCPHackers:DiffPatch:cde1224"))
+        include(dependency("com.google.code.gson:gson:2.10.1"))
+    }
 }
 
 tasks.getByName("build")
@@ -47,7 +53,7 @@ dependencies {
     implementation("net.fabricmc:tiny-remapper:0.8.7")
     implementation("net.fabricmc:mapping-io:0.4.2")
     shadow(gradleApi())
-    // testImplementation(kotlin("test"))
+    testImplementation(kotlin("test"))
 }
 
 tasks.test {
