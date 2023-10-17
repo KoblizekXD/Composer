@@ -21,6 +21,11 @@ import java.util.regex.Pattern
 
 abstract class DeobfuscateTask : DefaultTask() {
 
+    init {
+        group = "composer"
+        description = "Deobfusctaes source code"
+    }
+
     private fun deobfuscate(inputJar: File, outputPath: File, mappings: File) {
         val writer = StringWriter()
         MappingWriter.create(writer, MappingFormat.TINY_2).use { mapper ->

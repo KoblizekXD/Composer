@@ -12,6 +12,11 @@ import java.util.zip.ZipFile
 
 abstract class GenFilesTask : DefaultTask() {
 
+    init {
+        group = "composer"
+        description = "Generates required files"
+    }
+
     @TaskAction
     fun run() {
         if (temporaryDir.resolve("checked").exists()) return

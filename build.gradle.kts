@@ -1,35 +1,31 @@
-import org.gradle.jvm.tasks.Jar
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     kotlin("jvm") version "1.9.0"
     `java-library`
     `maven-publish`
     `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "1.1.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    // id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "lol.koblizek"
 version = "0.2"
 
-tasks.withType<Jar> {
-    this.archiveClassifier.set("slim")
-}
-
-tasks.getByName("shadowJar", ShadowJar::class) {
-    archiveClassifier = ""
-
-    dependencies {
-        include(dependency("net.fabricmc:tiny-remapper:0.8.7"))
-        include(dependency("net.neoforged:AutoRenamingTool:1.0.7"))
-        include(dependency("com.github.MCPHackers:DiffPatch:cde1224"))
-        include(dependency("com.google.code.gson:gson:2.10.1"))
-    }
-}
-
-tasks.getByName("build")
-    .finalizedBy(tasks.getByName("shadowJar"))
+//tasks.withType<Jar> {
+//    this.archiveClassifier.set("slim")
+//}
+//
+//tasks.getByName("shadowJar", ShadowJar::class) {
+//    archiveClassifier = ""
+//    configurations = listOf(project.configurations.compileClasspath.get())
+//
+//    dependencies {
+//        exclude("kotlin/**", "groovy/**")
+//        // exclude("\\b(?:groovy\\w*)\\b/**")
+//    }
+//}
+//
+//tasks.getByName("build")
+//    .finalizedBy(tasks.getByName("shadowJar"))
 
 repositories {
     mavenCentral()
@@ -52,7 +48,7 @@ dependencies {
     implementation("org.vineflower:vineflower:1.9.3")
     implementation("net.fabricmc:tiny-remapper:0.8.7")
     implementation("net.fabricmc:mapping-io:0.4.2")
-    shadow(gradleApi())
+    implementation(gradleApi()) // if use shadow
     testImplementation(kotlin("test"))
 }
 

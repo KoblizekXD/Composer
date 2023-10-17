@@ -13,6 +13,11 @@ import java.util.zip.ZipFile
 
 abstract class DownloadMappingsTask : DefaultTask() {
 
+    init {
+        group = "composer"
+        description = "Downloads mapping files"
+    }
+
     private fun getMappingsUrl(gameVersion: String): String {
         val array = readJsonArray(gameVersion)
         val latestMappings = array[0].asJsonObject.getAsJsonPrimitive("version").asString

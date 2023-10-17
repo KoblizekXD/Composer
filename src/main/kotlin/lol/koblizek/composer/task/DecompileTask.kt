@@ -7,6 +7,12 @@ import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
 abstract class DecompileTask : DefaultTask() {
+
+    init {
+        group = "composer"
+        description = "Decompiles source code"
+    }
+
     @Inject
     public abstract fun getWorkerExecutor(): WorkerExecutor
 
@@ -18,9 +24,7 @@ abstract class DecompileTask : DefaultTask() {
                 java.maxHeapSize = "2G"
             }
         }
-        queue.submit(VineflowerWorker::class.java) {
-            it.project = project
-        }
+        queue.submit(VineflowerWorker::class.java) {}
         temporaryDir.resolve("checked").createNewFile()
     }
 }

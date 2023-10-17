@@ -4,6 +4,8 @@ import lol.koblizek.composer.actions.*
 import lol.koblizek.composer.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import java.net.URI
 
 class ComposerPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -15,8 +17,8 @@ class ComposerPlugin : Plugin<Project> {
         deobfGame = target.tasks.create("deobfGame", DeobfuscateTask::class.java)
         downloadMappings = target.tasks.create("downloadMappings", DownloadMappingsTask::class.java)
         decompileGame = target.tasks.create("decompileGame", DecompileTask::class.java)
-        target.tasks.getByName("dependencies") {
-            it.setDependsOn(arrayListOf(genFiles, downloadMappings, decompileGame))
+        target.tasks.getByName("build") {
+            it.setDependsOn(arrayListOf(genFiles, downloadMappings, deobfGame, decompileGame))
         }
     }
 
@@ -47,4 +49,16 @@ fun runtimeConfig(cfg: RuntimeConfiguration.() -> Unit) {
     val config = RuntimeConfiguration()
     cfg(config)
     ComposerPlugin.config = config
+}
+
+fun composerRepositories(repositoryHandler: RepositoryHandler) {
+    repositoryHandler.maven {
+        it.url = URI("https://maven.neoforged.net/releases")
+    }
+    repositoryHandler.maven {
+        it.url = URI("https://maven.fabricmc.net/")
+    }
+    repositoryHandler.maven {
+        it.url = URI("https://jitpack.io")
+    }
 }

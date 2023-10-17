@@ -12,11 +12,10 @@ import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences
 import java.io.File
 
 abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
-    interface Parameters : WorkParameters {
-        var project: Project
-    }
+    interface Parameters : WorkParameters {}
 
     override fun execute() {
+        val project = ComposerPlugin.project
         if (!ComposerPlugin.isConfigInitialized() || ComposerPlugin.config.decompilationSource == null) {
             println("Cannot decompile: Missing runtimeConfig block or decompilationSource parameter")
             println("Run cleanUp task and rebuild the project once you fix the problem")
@@ -39,7 +38,7 @@ abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
             Logger()
         )
         fernFlower.addSource(ComposerPlugin.deobfGame.temporaryDir.resolve("server-deobf.jar"))
-        this.parameters.project.configurations.getByName("compileClasspath").files.forEach {
+        project.configurations.getByName("compileClasspath").files.forEach {
             fernFlower.addLibrary(it)
         }
         fernFlower.decompileContext()

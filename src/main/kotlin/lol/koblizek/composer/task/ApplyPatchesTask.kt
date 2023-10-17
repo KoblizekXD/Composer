@@ -9,7 +9,7 @@ import java.io.File
 
 abstract class ApplyPatchesTask : DefaultTask() {
     init {
-        group = "applyPatches"
+        group = "composer"
         description = "Applies patches to source code"
     }
 
