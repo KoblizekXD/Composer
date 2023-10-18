@@ -4,28 +4,10 @@ plugins {
     `maven-publish`
     `java-gradle-plugin`
     id("com.gradle.plugin-publish") version "1.1.0"
-    // id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "lol.koblizek"
 version = "0.2"
-
-//tasks.withType<Jar> {
-//    this.archiveClassifier.set("slim")
-//}
-//
-//tasks.getByName("shadowJar", ShadowJar::class) {
-//    archiveClassifier = ""
-//    configurations = listOf(project.configurations.compileClasspath.get())
-//
-//    dependencies {
-//        exclude("kotlin/**", "groovy/**")
-//        // exclude("\\b(?:groovy\\w*)\\b/**")
-//    }
-//}
-//
-//tasks.getByName("build")
-//    .finalizedBy(tasks.getByName("shadowJar"))
 
 repositories {
     mavenCentral()
@@ -48,7 +30,7 @@ dependencies {
     implementation("org.vineflower:vineflower:1.9.3")
     implementation("net.fabricmc:tiny-remapper:0.8.7")
     implementation("net.fabricmc:mapping-io:0.4.2")
-    implementation(gradleApi()) // if use shadow
+    implementation(gradleApi())
     testImplementation(kotlin("test"))
 }
 
