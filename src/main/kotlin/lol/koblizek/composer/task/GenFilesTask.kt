@@ -1,17 +1,25 @@
-package lol.koblizek.composer.actions
+package lol.koblizek.composer.task
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import lol.koblizek.composer.ComposerPlugin
 import lol.koblizek.composer.util.Download
 import org.apache.commons.io.FileUtils
-import org.gradle.api.Project
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
 import java.nio.file.Files
 import java.util.zip.ZipFile
 
-class GenFilesAction : Action() {
+abstract class GenFilesTask : DefaultTask() {
 
-    override fun run(project: Project) {
+    init {
+        group = "composer"
+        description = "Generates required files"
+    }
+
+    @TaskAction
+    fun run() {
+        if (temporaryDir.resolve("checked").exists()) return
         val manifest = Download(temporaryDir, "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json", "version_manifest.json").file
         val json = Gson().fromJson(manifest.readText(), JsonObject::class.java)
         val obj = json.getAsJsonArray("versions")
@@ -39,5 +47,6 @@ class GenFilesAction : Action() {
         temporaryDir.toPath().resolve("libraries.json").toFile().writer().use {
             Gson().toJson(versionData.getAsJsonArray("libraries"), it)
         }
+        temporaryDir.resolve("checked").createNewFile()
     }
 }

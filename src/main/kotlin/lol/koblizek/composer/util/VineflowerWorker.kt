@@ -1,16 +1,21 @@
-package lol.koblizek.composer.actions
+package lol.koblizek.composer.util
 
 import lol.koblizek.composer.ComposerPlugin
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
+import org.gradle.workers.WorkAction
+import org.gradle.workers.WorkParameters
 import org.jetbrains.java.decompiler.main.Fernflower
 import org.jetbrains.java.decompiler.main.decompiler.DirectoryResultSaver
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences
 import java.io.File
 
-class DecompileAction : Action() {
-    override fun run(project: Project) {
+abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
+    interface Parameters : WorkParameters {}
+
+    override fun execute() {
+        val project = ComposerPlugin.project
         if (!ComposerPlugin.isConfigInitialized() || ComposerPlugin.config.decompilationSource == null) {
             println("Cannot decompile: Missing runtimeConfig block or decompilationSource parameter")
             println("Run cleanUp task and rebuild the project once you fix the problem")
@@ -32,10 +37,11 @@ class DecompileAction : Action() {
             props,
             Logger()
         )
-        fernFlower.addSource(DeobfuscateAction().temporaryDir.resolve("server-deobf.jar"))
+        fernFlower.addSource(ComposerPlugin.deobfGame.temporaryDir.resolve("server-deobf.jar"))
         project.configurations.getByName("compileClasspath").files.forEach {
             fernFlower.addLibrary(it)
         }
+        fernFlower.decompileContext()
         ComposerPlugin.config.toRemove.forEach {
             val file = dir.toPath().resolve(it).toFile()
             if (file.exists()) {
@@ -53,7 +59,6 @@ class DecompileAction : Action() {
             val file = File(root!!).resolve(it)
             FileUtils.moveToDirectory(file, File(root), true)
         }
-        fernFlower.decompileContext()
     }
 
     class Logger : IFernflowerLogger() {

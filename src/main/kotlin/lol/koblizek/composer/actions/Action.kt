@@ -10,8 +10,6 @@ import kotlin.io.path.exists
 abstract class Action() {
     lateinit var temporaryDir: File
 
-    abstract fun run(project: Project)
-
     init {
         this::class.simpleName?.let {
             temporaryDir = ComposerPlugin.project.projectDir.toPath().resolve("composer")
@@ -19,9 +17,11 @@ abstract class Action() {
         }
     }
 
+    abstract fun run(project: Project)
+
     fun start(project: Project) {
         if (this::class.simpleName != "LoadLibrariesAction" && temporaryDir.toPath().resolve("done.txt").exists()) return
         run(project)
-        temporaryDir.toPath().resolve("done.txt").createFile()
+        // temporaryDir.toPath().resolve("done.txt").createFile()
     }
 }
