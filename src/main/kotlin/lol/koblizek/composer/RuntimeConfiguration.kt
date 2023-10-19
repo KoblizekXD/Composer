@@ -1,6 +1,8 @@
 package lol.koblizek.composer
 
-class RuntimeConfiguration {
+import java.io.Serializable
+
+class RuntimeConfiguration : Serializable {
     internal val resources: ArrayList<String> = ArrayList()
     internal val toRemove: ArrayList<String> = ArrayList()
     internal val moveToRoot: ArrayList<String> = ArrayList()

@@ -24,6 +24,7 @@ abstract class DeobfuscateTask : DefaultTask() {
     init {
         group = "composer"
         description = "Deobfusctaes source code"
+        dependsOn("downloadMappings")
     }
 
     private fun deobfuscate(inputJar: File, outputPath: File, mappings: File) {

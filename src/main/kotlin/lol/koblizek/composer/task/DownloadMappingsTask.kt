@@ -16,6 +16,7 @@ abstract class DownloadMappingsTask : DefaultTask() {
     init {
         group = "composer"
         description = "Downloads mapping files"
+        dependsOn("genFiles")
     }
 
     private fun getMappingsUrl(gameVersion: String): String {

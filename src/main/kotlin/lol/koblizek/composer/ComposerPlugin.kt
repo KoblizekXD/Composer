@@ -14,11 +14,11 @@ class ComposerPlugin : Plugin<Project> {
         target.tasks.create("genPatches", GenPatchesTask::class.java)
         target.tasks.create("applyPatches", ApplyPatchesTask::class.java)
         genFiles = target.tasks.create("genFiles", GenFilesTask::class.java)
-        deobfGame = target.tasks.create("deobfGame", DeobfuscateTask::class.java)
         downloadMappings = target.tasks.create("downloadMappings", DownloadMappingsTask::class.java)
+        deobfGame = target.tasks.create("deobfGame", DeobfuscateTask::class.java)
         decompileGame = target.tasks.create("decompileGame", DecompileTask::class.java)
         target.tasks.getByName("build") {
-            it.setDependsOn(arrayListOf(genFiles, downloadMappings, deobfGame, decompileGame))
+            it.dependsOn("decompileGame")
         }
     }
 
