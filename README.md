@@ -18,7 +18,7 @@ You can install the plugin to your Gradle project with **Kotlin DSL** by:
 - Adding the plugin itself to the **build.gradle.kts**
   ```kotlin
     plugins {
-        id("lol.koblizek.composter") version "0.1"
+        id("lol.koblizek.composter") version "0.2.1" // Replace version with any of Composer's versions
     } 
   ```
 
@@ -28,18 +28,20 @@ Here's a sample Gradle build file:
 ```kotlin
 // build.gradle.kts
 import lol.koblizek.composer.runtimeConfig
-import lol.koblizek.composer.minecraft
+import lol.koblizek.composer.minecraftLibraries
 
 runtimeConfig {
     // Use a server JAR file which is actually located in the wrapper JAR for decompilation
     extractAndUseInstead("META-INF/versions/1.19.4/server-1.19.4.jar")
     // Set default folder for decompiled code
     decompileIn(project.sourceSets.main.java.srcDir.iterator().next())
+    // Use 1.19.4 version for as game version
+    minecraft("1.19.4")
 }
 
 dependencies {
-    // Selects which Minecraft version download
-    minecraft("1.19.4")
+    // Apply Minecraft libraries as dependencies
+    minecraftLibraries()
 }
 ```
 
