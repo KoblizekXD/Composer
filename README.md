@@ -18,7 +18,7 @@ You can install the plugin to your Gradle project with **Kotlin DSL** by:
 - Adding the plugin itself to the **build.gradle.kts**
   ```kotlin
     plugins {
-        id("lol.koblizek.composter") version "0.2.1" // Replace version with any of Composer's versions
+        id("lol.koblizek.composer") version "0.2.1" // Replace version with any of Composer's versions
     } 
   ```
 
