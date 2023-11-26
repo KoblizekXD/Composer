@@ -76,10 +76,10 @@ dependencies {
     dependency("org.apache.commons:commons-lang3:3.13.0")
     dependency("commons-io:commons-io:2.14.0")
     dependency("com.google.code.gson:gson:2.10.1")
-    dependency("net.neoforged:AutoRenamingTool:1.0.7")
+    dependency("net.neoforged:AutoRenamingTool:1.0.9")
     dependency("org.vineflower:vineflower:1.9.3")
-    dependency("net.fabricmc:tiny-remapper:0.8.7")
-    dependency("net.fabricmc:mapping-io:0.4.2")
+    dependency("net.fabricmc:tiny-remapper:0.8.10")
+    dependency("net.fabricmc:mapping-io:0.5.0")
     implementation(gradleApi())
     testImplementation(kotlin("test"))
 }
