@@ -45,7 +45,7 @@ fun minecraftLibraries() {
     LoadLibrariesAction().start(ComposerPlugin.project)
 }
 
-fun runtimeConfig(cfg: RuntimeConfiguration.() -> Unit) {
+fun minecraft(cfg: RuntimeConfiguration.() -> Unit) {
     val config = RuntimeConfiguration()
     cfg(config)
     ComposerPlugin.config = config
