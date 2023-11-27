@@ -1,7 +1,7 @@
 package lol.koblizek.composer.task
 
 import lol.koblizek.composer.ComposerPlugin
-import lol.koblizek.composer.util.VineflowerWorker
+import lol.koblizek.composer.task.worker.VineflowerWorker
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.workers.WorkerExecutor

@@ -1,7 +1,6 @@
-package lol.koblizek.composer.util
+package lol.koblizek.composer.task.worker
 
 import lol.koblizek.composer.RuntimeConfiguration
-import org.apache.commons.io.FileUtils
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.jetbrains.java.decompiler.main.Fernflower
