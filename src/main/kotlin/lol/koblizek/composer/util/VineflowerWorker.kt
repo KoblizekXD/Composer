@@ -1,12 +1,7 @@
 package lol.koblizek.composer.util
 
-import lol.koblizek.composer.ComposerPlugin
 import lol.koblizek.composer.RuntimeConfiguration
 import org.apache.commons.io.FileUtils
-import org.gradle.api.Project
-import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.FileCollection
-import org.gradle.api.provider.Property
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.jetbrains.java.decompiler.main.Fernflower
@@ -17,14 +12,12 @@ import java.io.File
 
 abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
     interface Parameters : WorkParameters {
-        var files: Set<File>
+        var libraries: Set<File>
         var config: RuntimeConfiguration
         var sourceFile: File
     }
 
     override fun execute() {
-        // val project = ComposerPlugin.project }
-
         val props: MutableMap<String, Any> = HashMap(IFernflowerPreferences.DEFAULTS)
         props[IFernflowerPreferences.DECOMPILE_GENERIC_SIGNATURES] = "1"
         props[IFernflowerPreferences.REMOVE_SYNTHETIC] = "1"
@@ -41,27 +34,10 @@ abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
             Logger()
         )
         fernFlower.addSource(parameters.sourceFile)
-        parameters.files.forEach {
+        parameters.libraries.forEach {
             fernFlower.addLibrary(it)
         }
         fernFlower.decompileContext()
-        parameters.config.toRemove.forEach {
-            val file = dir.toPath().resolve(it).toFile()
-            if (file.exists()) {
-                if (file.isDirectory) file.deleteRecursively()
-                else file.delete()
-            }
-        }
-        if (parameters.config.resourcesSource != null) {
-            parameters.config.resources.forEach {
-                FileUtils.moveToDirectory(File(it), File(parameters.config.resourcesSource!!), true)
-            }
-        }
-        parameters.config.moveToRoot.forEach {
-            val root = parameters.config.decompilationSource
-            val file = File(root!!).resolve(it)
-            FileUtils.moveToDirectory(file, File(root), true)
-        }
     }
 
     class Logger : IFernflowerLogger() {

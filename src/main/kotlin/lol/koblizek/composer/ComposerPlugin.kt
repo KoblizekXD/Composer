@@ -2,6 +2,9 @@ package lol.koblizek.composer
 
 import lol.koblizek.composer.actions.*
 import lol.koblizek.composer.task.*
+import lol.koblizek.composer.task.util.ApplyPatchesTask
+import lol.koblizek.composer.task.util.CleanUpTask
+import lol.koblizek.composer.task.util.GenPatchesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.RepositoryHandler
@@ -17,9 +20,6 @@ class ComposerPlugin : Plugin<Project> {
         downloadMappings = target.tasks.create("downloadMappings", DownloadMappingsTask::class.java)
         deobfGame = target.tasks.create("deobfGame", DeobfuscateTask::class.java)
         decompileGame = target.tasks.create("decompileGame", DecompileTask::class.java)
-        target.tasks.getByName("build") {
-            it.dependsOn("decompileGame")
-        }
     }
 
     companion object {

@@ -3,50 +3,41 @@ package lol.koblizek.composer.task
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import lol.koblizek.composer.ComposerPlugin
+import lol.koblizek.composer.RuntimeConfiguration
 import lol.koblizek.composer.util.Download
 import org.apache.commons.io.FileUtils
 import org.gradle.api.DefaultTask
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskAction
+import java.net.URL
 import java.nio.file.Files
 import java.util.zip.ZipFile
 
-abstract class GenFilesTask : DefaultTask() {
+abstract class GenFilesTask : ComposerTask() {
 
     init {
         group = "composer"
-        description = "Generates required files"
+        description = "Generates file required for workspace setup"
     }
 
     @TaskAction
     fun run() {
-        if (temporaryDir.resolve("checked").exists()) return
-        val manifest = Download(temporaryDir, "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json", "version_manifest.json").file
-        val json = Gson().fromJson(manifest.readText(), JsonObject::class.java)
-        val obj = json.getAsJsonArray("versions")
-            .find {
-                it.asJsonObject.getAsJsonPrimitive("id")
-                    .asString == ComposerPlugin.version
-            } ?: return
-        val url = obj.asJsonObject.getAsJsonPrimitive("url").asString
-        val versionData = Gson().fromJson(Download(temporaryDir, url, "version_data.json").file.readText(), JsonObject::class.java)
-        val server = Download(temporaryDir, versionData.getAsJsonObject("downloads")
-            .getAsJsonObject("server").getAsJsonPrimitive("url").asString, "server.jar").file
-        if (ComposerPlugin.isConfigInitialized() && ComposerPlugin.config.useInstead != null) {
-            val zip = ZipFile(server)
-            val temp = temporaryDir.toPath().resolve("server-temp.jar").toFile()
-            val ins = zip.getInputStream(zip.getEntry(ComposerPlugin.config.useInstead!!))
-            FileUtils.copyInputStreamToFile(
-                ins,
-                temp
-            )
-            ins.close()
-            zip.close()
-            Files.delete(server.toPath())
-            temp.renameTo(server)
+        val config = ComposerPlugin.config
+
+        if (config.areDataSourcesInitialized()) {
+            val src = config.dataSources
+            if (src.isEverythingInitialized()) {
+                download("minecraft-original.jar", src.game)
+                download("minecraft-data.json", src.gameJson)
+                val maps = download("mappings", src.mappings)
+
+                if (src.doUseAltMappingFile()) {
+                    src.newMappings(maps)
+                }
+            } else
+                logger.error("Error: Failed to generate required files: Missing property/properties")
+        } else {
+            logger.error("Error: Failed to generate required files: Missing dataSources block")
         }
-        temporaryDir.toPath().resolve("libraries.json").toFile().writer().use {
-            Gson().toJson(versionData.getAsJsonArray("libraries"), it)
-        }
-        temporaryDir.resolve("checked").createNewFile()
     }
 }

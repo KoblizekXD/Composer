@@ -1,4 +1,4 @@
-package lol.koblizek.composer.task
+package lol.koblizek.composer.task.util
 
 import codechicken.diffpatch.DiffOperation
 import lol.koblizek.composer.ComposerPlugin

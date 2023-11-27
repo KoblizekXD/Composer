@@ -1,5 +1,6 @@
 package lol.koblizek.composer
 
+import java.io.File
 import java.io.Serializable
 import java.net.URI
 import java.net.URL
@@ -15,6 +16,10 @@ class RuntimeConfiguration : Serializable {
     internal lateinit var dataSources: DataSources
     internal lateinit var remapOptions: RemapOptions
     internal lateinit var decompileOptions: DecompileOptions
+
+    fun areDataSourcesInitialized(): Boolean = ::dataSources.isInitialized
+    fun areRemapOptionsInitialized(): Boolean = ::remapOptions.isInitialized
+    fun areDecompOptionsInitialized(): Boolean = ::decompileOptions.isInitialized
 
     /**
      * Sources used for downloading required data
@@ -43,6 +48,29 @@ class RuntimeConfiguration : Serializable {
          * Game Side, either client or server
          */
         lateinit var side: Side
+
+        internal lateinit var newMappings: File.() -> File
+
+        fun isSideInitialized(): Boolean = ::side.isInitialized
+        fun isMappingsInitialized(): Boolean = ::mappings.isInitialized
+        fun isGameJsonInitialized(): Boolean = ::gameJson.isInitialized
+        fun isGameInitialized(): Boolean = ::game.isInitialized
+        fun doUseAltMappingFile(): Boolean = ::newMappings.isInitialized
+
+        fun isEverythingInitialized(): Boolean {
+            return isGameInitialized() && isSideInitialized() && isGameJsonInitialized() && isMappingsInitialized()
+        }
+
+        /**
+         * Allows to manipulate with the default downloaded mapping file,
+         * before it's passed to any other task. This can help in cases,
+         * where mappings are delivered in Jar archives(Fabric mappings).
+         *
+         * @param file default mapping file downloaded, returns the new mapping file
+         */
+        fun editMappings(file: File.() -> File) {
+            newMappings = file
+        }
     }
 
     fun sources(src: DataSources.() -> Unit) {
@@ -70,6 +98,9 @@ class RuntimeConfiguration : Serializable {
          * Whether apply NeoForge's ART
          */
         var applyArt: Boolean = false
+
+        fun isNmsInitialized(): Boolean = ::nms.isInitialized
+        fun isMappingsInitialized(): Boolean = ::mappings.isInitialized
     }
 
     fun remap(opt: RemapOptions.() -> Unit) {
@@ -90,6 +121,8 @@ class RuntimeConfiguration : Serializable {
          * targetDir is uninitialized
          */
         var createPatchSources: Boolean = false
+
+        fun isTargetDirInitialized(): Boolean = ::targetDir.isInitialized
     }
 
     fun decompile(opt: DecompileOptions.() -> Unit) {
@@ -97,4 +130,6 @@ class RuntimeConfiguration : Serializable {
         opt(temp)
         decompileOptions = temp
     }
+
+    data class PostDecompilationWorkflow(val srcDirectory: File) {}
 }

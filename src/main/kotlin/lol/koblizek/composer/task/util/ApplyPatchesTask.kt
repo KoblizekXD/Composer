@@ -1,4 +1,4 @@
-package lol.koblizek.composer.task
+package lol.koblizek.composer.task.util
 
 import codechicken.diffpatch.PatchOperation
 import codechicken.diffpatch.util.PatchMode

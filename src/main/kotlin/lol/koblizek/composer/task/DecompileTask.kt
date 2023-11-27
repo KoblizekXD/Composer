@@ -27,7 +27,7 @@ abstract class DecompileTask : DefaultTask() {
             }
         }
         queue.submit(VineflowerWorker::class.java) {
-            it.files = (project.configurations.getByName("compileClasspath").files)
+            it.libraries = (project.configurations.getByName("compileClasspath").files)
             it.config = ComposerPlugin.config
             it.sourceFile = ComposerPlugin.deobfGame.temporaryDir.resolve("server-deobf.jar")
         }
