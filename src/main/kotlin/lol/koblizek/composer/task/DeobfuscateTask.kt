@@ -37,7 +37,9 @@ abstract class DeobfuscateTask : DefaultTask() {
     @TaskAction
     fun run() {
         var unDeobf = ComposerPlugin.genFiles.temporaryDir.resolve("minecraft.jar")
-        val mappings = ComposerPlugin.genFiles.temporaryDir.resolve("mappings")
+        val mappings = if (ComposerPlugin.genFiles.newMappings == null)
+            ComposerPlugin.genFiles.temporaryDir.resolve("mappings")
+        else ComposerPlugin.genFiles.newMappings
         if (ComposerPlugin.config.remapOptions.applyArt) {
             Renamer.builder().add(Transformer.recordFixerFactory())
                 .add(Transformer.sourceFixerFactory(SourceFixerConfig.JAVA))
@@ -54,7 +56,7 @@ abstract class DeobfuscateTask : DefaultTask() {
         }
         queue.submit(DeobfuscationWorker::class.java) {
             it.inputJar = unDeobf
-            it.mappings = mappings
+            it.mappings = mappings!!
             it.outputPath = deobf
             it.options = ComposerPlugin.config.remapOptions
         }

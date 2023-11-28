@@ -17,6 +17,7 @@ class ComposerPlugin : Plugin<Project> {
         target.tasks.create("cleanUp", CleanUpTask::class.java)
         target.tasks.create("genPatches", GenPatchesTask::class.java)
         target.tasks.create("applyPatches", ApplyPatchesTask::class.java)
+        target.tasks.create("setupWorkspace", SetupWorkspaceTask::class.java)
         genFiles = target.tasks.create("genFiles", GenFilesTask::class.java)
         deobfGame = target.tasks.create("deobfGame", DeobfuscateTask::class.java)
         decompileGame = target.tasks.create("decompileGame", DecompileTask::class.java)

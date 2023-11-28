@@ -24,6 +24,11 @@ abstract class GenFilesTask : ComposerTask() {
 
     @TaskAction
     fun run() {
+        if (!ComposerPlugin.isConfigInitialized()) {
+            logger.error("Error: Configuration block is not initialized, cannot continue")
+            return
+        }
+
         val config = ComposerPlugin.config
 
         if (config.areDataSourcesInitialized()) {
@@ -34,7 +39,7 @@ abstract class GenFilesTask : ComposerTask() {
                 val maps = download("mappings", src.mappings)
 
                 if (src.doUseAltMappingFile()) {
-                    src.newMappings(maps)
+                    val file = src.newMappings(RuntimeConfiguration.DataSources.ModifyFileData(maps, temporaryDir))
                 }
 
                 if (file.exists()) {
@@ -50,4 +55,6 @@ abstract class GenFilesTask : ComposerTask() {
             logger.error("Error: Failed to generate required files: Missing dataSources block")
         }
     }
+
+    var newMappings: File? = null
 }
