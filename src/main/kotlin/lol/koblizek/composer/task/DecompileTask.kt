@@ -20,17 +20,19 @@ abstract class DecompileTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        if (temporaryDir.resolve("checked").exists()) return
-        val queue = getWorkerExecutor().processIsolation {
-            it.forkOptions { java ->
-                java.maxHeapSize = "2G"
+        if (ComposerPlugin.config.decompileOptions.isTargetDirInitialized()) {
+            val queue = getWorkerExecutor().processIsolation {
+                it.forkOptions { java ->
+                    java.maxHeapSize = "2G"
+                }
             }
+            queue.submit(VineflowerWorker::class.java) {
+                it.libraries = (project.configurations.getByName("compileClasspath").files)
+                it.config = ComposerPlugin.config.decompileOptions
+                it.sourceFile = ComposerPlugin.deobfGame.temporaryDir.resolve("minecraft-deobf.jar")
+            }
+        } else {
+            println("Skipping decompilation...")
         }
-        queue.submit(VineflowerWorker::class.java) {
-            it.libraries = (project.configurations.getByName("compileClasspath").files)
-            it.config = ComposerPlugin.config
-            it.sourceFile = ComposerPlugin.deobfGame.temporaryDir.resolve("server-deobf.jar")
-        }
-        temporaryDir.resolve("checked").createNewFile()
     }
 }

@@ -25,7 +25,12 @@ abstract class DeobfuscationWorker : WorkAction<DeobfuscationWorker.Deobfuscatio
 
     override fun execute() {
         val writer = StringWriter()
-        MappingWriter.create(writer, MappingFormat.TINY_2_FILE).use { mapper ->
+        val format = when (parameters.options.mappings) {
+            RuntimeConfiguration.RemapOptions.MappingsProvider.TINYV2 -> MappingFormat.TINY_2_FILE
+            RuntimeConfiguration.RemapOptions.MappingsProvider.SRG -> MappingFormat.TSRG_2_FILE
+            else -> MappingFormat.PROGUARD_FILE
+        }
+        MappingWriter.create(writer, format).use { mapper ->
             MappingReader.read(
                 parameters.mappings.toPath(), MappingNsCompleter(
                     MappingSourceNsSwitch(mapper, "official", true), emptyMap<String, String>()

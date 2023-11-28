@@ -8,6 +8,7 @@ import lol.koblizek.composer.task.util.GenPatchesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.RepositoryHandler
+import java.io.File
 import java.net.URI
 
 class ComposerPlugin : Plugin<Project> {

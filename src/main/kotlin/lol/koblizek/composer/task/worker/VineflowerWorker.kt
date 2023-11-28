@@ -12,7 +12,7 @@ import java.io.File
 abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
     interface Parameters : WorkParameters {
         var libraries: Set<File>
-        var config: RuntimeConfiguration
+        var config: RuntimeConfiguration.DecompileOptions
         var sourceFile: File
     }
 
@@ -25,7 +25,7 @@ abstract class VineflowerWorker : WorkAction<VineflowerWorker.Parameters> {
         props[IFernflowerPreferences.TERNARY_CONDITIONS] = "1"
         props[IFernflowerPreferences.THREADS] = (Runtime.getRuntime().availableProcessors() / 2).toString()
 
-        val dir = File(parameters.config.decompilationSource!!)
+        val dir = File(parameters.config.targetDir)
 
         val fernFlower = Fernflower(
             DirectoryResultSaver(dir),

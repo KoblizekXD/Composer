@@ -49,7 +49,7 @@ class RuntimeConfiguration : Serializable {
          */
         lateinit var side: Side
 
-        internal lateinit var newMappings: File.() -> File
+        internal lateinit var newMappings: ModifyFileData.() -> File
 
         fun isSideInitialized(): Boolean = ::side.isInitialized
         fun isMappingsInitialized(): Boolean = ::mappings.isInitialized
@@ -61,6 +61,8 @@ class RuntimeConfiguration : Serializable {
             return isGameInitialized() && isSideInitialized() && isGameJsonInitialized() && isMappingsInitialized()
         }
 
+        data class ModifyFileData(val file: File, val dir: File)
+
         /**
          * Allows to manipulate with the default downloaded mapping file,
          * before it's passed to any other task. This can help in cases,
@@ -68,11 +70,21 @@ class RuntimeConfiguration : Serializable {
          *
          * @param file default mapping file downloaded, returns the new mapping file
          */
-        fun editMappings(file: File.() -> File) {
+        fun editMappings(file: ModifyFileData.() -> File) {
             newMappings = file
         }
     }
 
+    /**
+     * Please provide values for following fields:
+     * - game
+     * - gameJson
+     * - mappings
+     * - side
+     * - newMappings*
+     *
+     * *Required only when mappings are not yet ready
+     */
     fun sources(src: DataSources.() -> Unit) {
         val temp = DataSources()
         src(temp)

@@ -34,42 +34,6 @@ abstract class DeobfuscateTask : DefaultTask() {
     @Inject
     public abstract fun getWorkerExecutor(): WorkerExecutor
 
-    private fun deobfuscate(inputJar: File, outputPath: File, mappings: File) {
-        val writer = StringWriter()
-        MappingWriter.create(writer, MappingFormat.TINY_2_FILE).use { mapper ->
-            MappingReader.read(
-                mappings.toPath(), MappingNsCompleter(
-                    MappingSourceNsSwitch(mapper, "official", true), emptyMap<String, String>()
-                )
-            )
-        }
-        val remapper = TinyRemapper.newRemapper().invalidLvNamePattern(Pattern.compile("\\$\\$\\d+"))
-            .renameInvalidLocals(true)
-            .inferNameFromSameLvIndex(true)
-            .withMappings(
-                TinyUtils.createTinyMappingProvider(
-                    BufferedReader(StringReader(writer.toString())),
-                    "official",
-                    "named"
-                )
-            ).build()
-        writer.close()
-        try {
-            OutputConsumerPath.Builder(outputPath.toPath()).build().use { outputConsumer ->
-                outputConsumer.addNonClassFiles(inputJar.toPath(), NonClassCopyMode.FIX_META_INF, remapper)
-                remapper.readInputs(inputJar.toPath())
-                remapper.apply(outputConsumer)
-                outputConsumer.close()
-            }
-        } catch (e: IOException) {
-            println("Error occurred but was ignored")
-        } finally {
-            remapper.finish()
-        }
-    }
-
-
-
     @TaskAction
     fun run() {
         var unDeobf = ComposerPlugin.genFiles.temporaryDir.resolve("minecraft.jar")
